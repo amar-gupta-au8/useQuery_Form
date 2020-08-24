@@ -6,7 +6,7 @@ import { auth } from '../firebase';
 
 const UserState = ({ children }) => {
   const initialState = {
-    user: null,
+    user: {},
     loading: false,
     error: null,
   };
