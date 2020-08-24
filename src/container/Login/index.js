@@ -1,20 +1,26 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { Styles } from '../../Utils/Style';
 import { Formik, Form } from 'formik';
 import CustomCheckBox from '../../components/CustomCheckBox';
-import CustomSelect from '../../components/CustomSelect';
 import CustomTextInput from '../../components/CustomTextInput';
 import * as Yup from 'yup';
+import UserContext from '../../context/userContext';
 
 const Home = () => {
+  const userContextValue = useContext(UserContext);
+
+  const { user, loading, error } = userContextValue;
+
+  console.log(`User: ${user}, Loading: ${loading}, Error: ${error}`);
+
   return (
     <Styles>
       <Formik
         initialValues={{
           name: '',
           email: '',
+          password: '',
           acceptedTerms: false,
-          specialPower: '',
         }}
         validationSchema={Yup.object({
           name: Yup.string()
@@ -25,14 +31,13 @@ const Home = () => {
           acceptedTerms: Yup.boolean()
             .oneOf([true], 'You must accept the terms and condition')
             .required('Required'),
-          specialPower: Yup.string()
-            .oneOf(
-              ['flight', 'invisiblity', 'waealty Fat Guy', 'other'],
-              'Invalid special powes'
-            )
-            .required('Required'),
+          password: Yup.string()
+            .required()
+            .min(2, 'Seems a bit short...')
+            .max(10, 'We prefer insecure system, try a shorter password.'),
         })}
         onSubmit={(values, { setSubmitting, resetForm }) => {
+          console.log(values);
           setTimeout(() => {
             alert(JSON.stringify(values, null, 2));
             resetForm();
@@ -56,15 +61,12 @@ const Home = () => {
               type='email'
               placeholder='theamargupta.tech@gmail.com'
             />
-            <CustomSelect label='Special power' name='specialPower'>
-              {['flight', 'invisiblity', 'waealty Fat Guy', 'other'].map(
-                (data) => (
-                  <option key={data} value={`${data}`}>
-                    {data}
-                  </option>
-                )
-              )}
-            </CustomSelect>
+            <CustomTextInput
+              label='Password'
+              name='password'
+              type='password'
+              placeholder='********'
+            />
             <CustomCheckBox name='acceptedTerms'>
               I accept he terms and condition
             </CustomCheckBox>
