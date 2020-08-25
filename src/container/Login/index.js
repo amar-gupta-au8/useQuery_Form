@@ -1,22 +1,17 @@
 import React, { useContext } from 'react';
 import { Styles } from '../../Utils/Style';
 import { Formik, Form } from 'formik';
-import Loader from '../../components/Loader';
+// import Loader from '../../components/Loader';
 import CustomTextInput from '../../components/CustomTextInput';
 import * as Yup from 'yup';
 import UserContext from '../../context/userContext';
-import { Redirect } from 'react-router-dom';
 
 const Home = () => {
   const userContextValue = useContext(UserContext);
 
-  const { user, loading, error } = userContextValue;
+  const { signInUser } = userContextValue;
 
-  console.log(`User: ${user}, Loading: ${loading}, Error: ${error}`);
-
-  return user.displayName ? (
-    <Redirect to='/home' />
-  ) : !loading ? (
+  return (
     <Styles>
       <Formik
         initialValues={{
@@ -32,6 +27,7 @@ const Home = () => {
         })}
         onSubmit={(values, { setSubmitting, resetForm }) => {
           // handleClick(values);
+          signInUser(values);
           resetForm();
           setSubmitting(false);
         }}
@@ -61,9 +57,10 @@ const Home = () => {
         )}
       </Formik>
     </Styles>
-  ) : (
-    <Loader />
   );
+  // ) : (
+  //   <Loader />
+  // );
 };
 
 export default Home;
